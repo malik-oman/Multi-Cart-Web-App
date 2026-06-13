@@ -4,7 +4,8 @@ import EditRoleandPhone from '@/components/EditRoleandPhone'
 import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import UserDashboard from '@/components/User/UserDashboard'
-import VendorDashboard from '@/components/Vendor/VendorDashboard'
+import EditVendorDetails from '@/components/Vendor/EditVendorDetails'
+import VendorPage from '@/components/Vendor/VendorPage'
 import connectDb from '@/lib/connectDb'
 import User from '@/models/user.model'
 import { redirect } from 'next/navigation'
@@ -22,6 +23,14 @@ export default async function page() {
       return <EditRoleandPhone/>
     }
 
+    if(user?.role == "vendor"){
+      const isCompleteDetails = !user.shopName || !user.shopAddress || !user.gstNumber
+      if(isCompleteDetails){
+       return <EditVendorDetails/>
+      }
+    }
+
+
       const plainUser = JSON.parse(JSON.stringify(user))
 
   return (
@@ -29,7 +38,7 @@ export default async function page() {
 
       <Navbar user={plainUser}/>
 
-      {user?.role == "user" ? <UserDashboard/> : user?.role == "vendor" ? <VendorDashboard/> : <AdminDashboard/>}
+      {user?.role == "user" ? <UserDashboard/> : user?.role == "vendor" ? <VendorPage user={plainUser}/> : <AdminDashboard/>}
       <Footer user={plainUser}/>
     </div>
   )

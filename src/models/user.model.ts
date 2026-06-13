@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema<IUser>({
     type:String
   },
   gstNumber:{
-    type:Number
+    type:String
   },
   isApproved:{
     type:Boolean,
@@ -87,11 +87,11 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   vendorProducts:[{
     type: mongoose.Schema.Types.ObjectId,
-    red:"Product"
+    ref:"Product"
   }],
   orders:[{
     type: mongoose.Schema.Types.ObjectId,
-    red:"Orders"
+    ref:"Orders"
   }],
   cart:[
     {
