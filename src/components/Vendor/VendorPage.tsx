@@ -2,7 +2,7 @@ import React from 'react'
 import { IUser } from '@/models/user.model'
 import VendorDashboard from './VendorDashboard'
 
-import { Clock, ShieldCheck, Hourglass, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Clock, ShieldCheck, Hourglass, AlertCircle, CheckCircle2, XCircle, RefreshCcw, Mail, MessageSquare, ArrowRight } from 'lucide-react'
 
 function VendorPage({ user }: { user: IUser }) {
  
@@ -99,7 +99,61 @@ function VendorPage({ user }: { user: IUser }) {
 
   if (user.verificationStatus == "rejected") {
     return (
-      <div className='w-full min-h-screen flex items-center justify-center bg-linear-to-br from-gray-900 via-black to-gray-900 text-white px-4'></div>
+      <div className='w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white px-4 py-8 sm:px-6'>
+        <div className='bg-white/[0.06] backdrop-blur-[20px] p-8 sm:p-14 rounded-[2rem] shadow-2xl shadow-black/50 border border-white/[0.1] max-w-xl w-full text-center relative overflow-hidden'>
+          
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mb-8">
+            <XCircle size={14} className="text-red-400" />
+            <span className="text-red-400 text-xs font-semibold uppercase tracking-widest">Rejected</span>
+          </div>
+  
+          <div className="mx-auto mb-6 w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-red-500/15 to-orange-500/15 border border-red-500/20 flex items-center justify-center">
+            <XCircle size={40} className="text-red-400" strokeWidth={1.2} />
+          </div>
+  
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
+            Application Rejected
+          </h2>
+          
+          <p className='text-gray-400 text-base sm:text-lg leading-relaxed mb-8 max-w-sm mx-auto'>
+            Unfortunately, your vendor application was not approved. Please review the reason below and <span className='text-white font-medium'>re-apply</span> with correct information.
+          </p>
+  
+          <div className='bg-white/[0.04] border border-white/[0.08] rounded-2xl p-6 mb-6'>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <AlertCircle size={20} className="text-red-400" />
+              <span className="text-sm text-gray-400 uppercase tracking-wider font-medium">Rejection Reason</span>
+            </div>
+            
+            <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 mb-3">
+              <p className='text-red-300 text-sm leading-relaxed'>
+                {user.rejectedReason || "No specific reason provided. Please ensure all your documents and information are accurate and try again."}
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
+              <Mail size={14} />
+              <span>Contact support if you believe this is a mistake</span>
+            </div>
+          </div>
+  
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 py-3 rounded-xl text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+              <RefreshCcw size={18} />
+              Re-Apply Now
+              <ArrowRight size={16} />
+            </button>
+            <button className="flex-1 flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 py-3 rounded-xl text-sm font-semibold text-slate-300 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+              <MessageSquare size={18} />
+              Contact Support
+            </button>
+          </div>
+  
+        </div>
+      </div>
     )
   }
 

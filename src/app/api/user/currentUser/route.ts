@@ -13,7 +13,7 @@ export async function GET() {
         return NextResponse.json({message:"User is not found"},{status:400})
       }
 
-      return NextResponse.json({user},{status:200})
+      return NextResponse.json(user,{status:200})
 
     } catch (error) {
       return NextResponse.json({message:`get current user error ${error}`},{status:500})
