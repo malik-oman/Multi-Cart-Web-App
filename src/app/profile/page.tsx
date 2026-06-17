@@ -4,9 +4,9 @@
 // IMPORTS
 // ============================================================
 import UsetGetCurrentUser from '@/hooks/UsetGetCurrentUser'
-import { RootState } from '@/redux/store'
+import { AppDispatch, RootState } from '@/redux/store'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import { 
@@ -24,6 +24,8 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import userImage from "@/assets/profile.png"
+import axios from 'axios'
+import { setUserData } from '@/redux/userSlice'
 
 // ============================================================
 // PROFILE COMPONENT
@@ -38,6 +40,8 @@ function Profile() {
   const [loading, setLoading] = useState(false)                       // Loading state
 
   const router = useRouter()
+
+  const dispatch = useDispatch<AppDispatch>()
 
   // Fetch current user data
   UsetGetCurrentUser()
@@ -113,9 +117,27 @@ function Profile() {
     ] : [])
   ]
 
-  // ============================================================
-  // RENDER
-  // ============================================================
+      const handleProfile = async () => {
+          const formData = new FormData()
+          formData.append("name",name)
+          formData.append("phone",phone)
+          if (profileImage) {
+            formData.append("image", profileImage)
+          }
+          setLoading(true)
+          try {
+            const result = await axios.post("/api/user/update-profile",formData)
+            dispatch(setUserData(result.data))
+            setLoading(false)
+            setprofileImage(null)
+            alert("Profile updated succesfully")
+          } catch (error) {
+            console.log(error)
+            setLoading(false)
+            alert("Profile updated Error")
+          }
+      }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white px-4 pt-24 pb-10">
 
@@ -353,12 +375,14 @@ function Profile() {
 
                 {/* Update profile button */}
                 <motion.button
+                onClick={handleProfile}
+                disabled={loading}
                   whileHover={{ scale: 1.01, y: -1 }}
                   whileTap={{ scale: 0.99 }}
                   className="bg-blue-600 hover:bg-blue-700 w-full py-3 rounded-lg font-semibold text-sm text-white transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   <Save className="w-4 h-4" />
-                  Update Profile
+                  {loading ? "Updating ......" : " Update Profile"}
                 </motion.button>
               </div>
             </motion.div>
