@@ -1,15 +1,18 @@
+import { IProduct } from "@/models/product.mode"
 import { IUser } from "@/models/user.model"
 import { createSlice } from "@reduxjs/toolkit"
 
 
 
 interface IUserData {
-  allVendorsData : IUser[]
+  allVendorsData : IUser[],
+  allProductsData : IProduct[]
 }
 
 
 const initialState : IUserData = {
-  allVendorsData: []
+  allVendorsData: [],
+  allProductsData:[]
 }
 
 const vendorSlice = createSlice({
@@ -18,9 +21,13 @@ const vendorSlice = createSlice({
   reducers:{
     setAllVendorsData:(state,action)=>{
       state.allVendorsData = action.payload
-    }
+    },
+    setAllProductsData:(state,action)=>{
+      state.allProductsData = action.payload
+    },
   }
 })
 
 export const {setAllVendorsData} = vendorSlice.actions
+export const {setAllProductsData} = vendorSlice.actions
 export default vendorSlice.reducer

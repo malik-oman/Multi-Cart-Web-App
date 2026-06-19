@@ -1,13 +1,17 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import Image from 'next/image';
 import { UploadIcon, X, Plus, Package, Tag, DollarSign, Layers, Shirt, RotateCcw, ShieldCheck, Truck, CreditCard, Check } from 'lucide-react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
-function AddVendorProduct() {
+function UpdateProduct() {
+
+
 
   const router = useRouter()
 
@@ -26,6 +30,14 @@ function AddVendorProduct() {
   ];
 
   const sizeOptions = ["XS", "S", "M", "L", "XL", "XXL"];
+
+  const params = useParams()
+  const productId = params.id as string
+
+  const {allProductsData} = useSelector((state:RootState)=>state.vendor)
+
+  const product = allProductsData?.find((p)=> String(p._id)=== String(productId))
+
 
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -54,6 +66,29 @@ function AddVendorProduct() {
   const [currentPoints, setCurrentPoint] = useState("")
   const [pointIndex, setPointIndex] = useState(0)
   const [loading,setLoading] = useState(false)
+
+  useEffect(()=>{
+      if (!product) return;
+
+      setTitle(product.title)
+      setDescription(product.description)
+      setPrice(String(product.price))
+      setStock(String(product.stock))
+      setCategory(product.category)
+      setIsWearable(Boolean(product.isWearable))
+      setSizes(product.sizes || [])
+      setReplacementDays(product.replacementDays ? String(product.replacementDays) : "")
+      setFreeDelivery(Boolean(product.freeDelivery))
+      setWarranty(product.warranty || "")
+      setPayOnDelivery(Boolean(product.payOnDelivery))
+      setDetailPoints(product.detailPoint || [])
+      setPointIndex(product.detailPoint?.length || 0)
+      setPreview1(product.image1)
+      setPreview2(product.image2)
+      setPreview3(product.image3)
+      setPreview4(product.image4)
+
+  },[])
 
 
   const toggleSize = (size: string) => {
@@ -509,7 +544,7 @@ function AddVendorProduct() {
           className='w-full mt-4 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 py-4 rounded-2xl font-semibold text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-black/20'
         >
           <Package size={20} />
-          {loading ? "Submiting ..." : "Add Product"}
+          {loading ? "Submiting ..." : "Update Product"}
         </motion.button>
 
       </motion.div>
@@ -517,4 +552,4 @@ function AddVendorProduct() {
   )
 }
 
-export default AddVendorProduct
+export default UpdateProduct

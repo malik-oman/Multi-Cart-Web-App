@@ -36,7 +36,7 @@ export interface IProduct{
   warranty?:string;
   payOnDelivery?:boolean;
 
-  detailsPoint:string[];
+  detailPoint:string[];
 
   reviews?: {
     user: IUser;
@@ -120,7 +120,7 @@ const productSceham = new mongoose.Schema<IProduct>({
   payOnDelivery:{
     type:Boolean, default:false,
   },
-  detailsPoint:{
+  detailPoint:{
     type:[String],
     default:[],
   },
