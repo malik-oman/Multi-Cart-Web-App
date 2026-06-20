@@ -114,16 +114,14 @@ function UpdateProduct() {
 
 
   const handleSubmit = async () => {
-    if (!title || !description || !price || !stock || !category || !image1 || !image2 || !image3 || !image4){
-      alert("All Field and images are required")
-      return;
-    } 
+   
     if(isWearable && sizes.length === 0){
       alert("Please select at least one size")
       return;
     }
     setLoading(true)
     const formData = new FormData()
+    formData.append("productId", productId)
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price);
@@ -145,15 +143,15 @@ function UpdateProduct() {
     }
 
     try {
-        const result = await axios.post("/api/vendor/addProduct", formData)
+        const result = await axios.post("/api/vendor/updateProduct", formData)
        
         setLoading(false)
-        alert("Product added successfully, Waiting for admin approval")
+        alert("Product UPDATE successfully, Waiting for admin approval")
         router.push("/")
     } catch (error) {
      setLoading(false) 
-     console.log("ADD PRODUCT ERROR:", error)
-     alert("❌PRODUCT ADD FAILED")
+     console.log("UPDATE PRODUCT ERROR:", error)
+     alert("❌PRODUCT UPDATE FAILED")
     }
   }
 

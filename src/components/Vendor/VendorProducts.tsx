@@ -3,8 +3,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/redux/store'
 import {
   AlertTriangle,
   Plus,
@@ -22,11 +22,15 @@ import {
 import Image from 'next/image'
 import UsetGetCurrentUser from '@/hooks/UsetGetCurrentUser'
 import UseGetAllProducts from '@/hooks/UseGetAllProductsData'
+import axios from 'axios'
+import { setAllProductsData } from '@/redux/vendorSlice'
 
 function VendorProducts() {
   const router = useRouter()
   UsetGetCurrentUser()
   UseGetAllProducts()
+
+  const dispatch = useDispatch<AppDispatch>()
 
   const currentUser = useSelector((state: RootState) => state.user.userData)
   const { allProductsData } = useSelector((state: RootState) => state.vendor)
@@ -34,6 +38,18 @@ function VendorProducts() {
   const myproducts = currentUser?._id && allProductsData?.length
     ? allProductsData.filter((p: any) => p.vendor === currentUser?._id || p.vendor?._id === currentUser?._id)
     : []
+
+    const toggleIsActive = async (productId:string, currentIsActive:Boolean) => {
+      try {
+          const result = await axios.post("/api/vendor/isActiveProduct",{productId, isActive:!currentIsActive})
+          const updatedProduct = allProductsData.map((p:any)=>p._id === productId ? result.data : p)
+          dispatch(setAllProductsData(updatedProduct))
+
+      } catch (error) {
+        console.log(error)
+        alert("update is ACTIVE error")
+      }
+    }
 
   const stats = {
     total: myproducts.length,
@@ -268,6 +284,7 @@ function VendorProducts() {
                             Edit
                           </motion.button>
                           <motion.button
+                          onClick={()=>toggleIsActive(String(p._id), Boolean(p.isActive))}
                             whileHover={{ scale: 1.08 }}
                             whileTap={{ scale: 0.92 }}
                             disabled={p.verificationStatus !== "approved"}
@@ -400,6 +417,7 @@ function VendorProducts() {
                     Edit
                   </motion.button>
                   <motion.button
+                    onClick={()=>toggleIsActive(String(p._id), Boolean(p.isActive))}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     disabled={p.verificationStatus !== "approved"}
